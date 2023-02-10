@@ -72,13 +72,13 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 	
 	public void gestore() {
 		try {
-			System.out.println("Benvenuto nel gestore di prenotazioni");
+			System.out.println("--- Benvenuto nel gestore delle prenotazioni ---");
 			System.out.println("-------------------------------------");
 			System.out.println("1 - Area amministrativa");
 			System.out.println("2 - Crea un utente");
 			System.out.println("3 - Prenota postazione");
 			System.out.println("4 - Ricerca");
-			System.out.println("Seleziona un numero");
+			System.out.println("Seleziona un numero:");
 			int selezione = in.nextInt();
 			switch (selezione) {
 			case (1):
@@ -106,11 +106,11 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 
 	static String tipoSelect;
 	public void ricerca() {
-		System.out.println("Benvenuto nella ricerca!");
+		System.out.println("--- Benvenuto nella ricerca! ---");
 		System.out.println("1 - Ricerca per Tipo");
 		System.out.println("2 - Ricerca per città");
 		System.out.println("3 - Ricerca per tipo e città");
-		System.out.println("Inserisci un numero");
+		System.out.println("Inserisci un numero:");
 		int selezione = in.nextInt();
 		switch(selezione) {
 		case(1):
@@ -132,7 +132,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		System.out.println("1 - PRIVATO");
 		System.out.println("2 - OPENSPACE");
 		System.out.println("3 - SALA_RIUNIONI");
-		System.out.println("Inserisci un numero");
+		System.out.println("Inserisci un numero:");
 		int selezioneTipo = in.nextInt();
 		
 		if (selezioneTipo == 1) {
@@ -142,7 +142,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		} else if (selezioneTipo == 3) {
 			tipoSelect= "SALA_RIUNIONI";
 		} else {
-			System.out.println("inserisci un valore esatto!");
+			System.out.println("Inserisci un valore esatto!");
 		}	
 		
 		findFromTipo(tipoSelect);
@@ -157,7 +157,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		System.out.println("1 - PRIVATO");
 		System.out.println("2 - OPENSPACE");
 		System.out.println("3 - SALA_RIUNIONI");
-		System.out.println("Inserisci un numero");
+		System.out.println("Inserisci un numero:");
 		int selezioneTipo = in.nextInt();
 		
 		if (selezioneTipo == 1) {
@@ -167,7 +167,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		} else if (selezioneTipo == 3) {
 			tipoSelect= "SALA_RIUNIONI";
 		} else {
-			System.out.println("inserisci un valore esatto!");
+			System.out.println("Inserisci un valore esatto!");
 		}	
 		in.nextLine();
 		System.out.println("Inserisci nome città: ");
@@ -177,17 +177,33 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 	
 	public void creaPrenotazione() {
 		in.nextLine();
-		System.out.println("Inserisci la data in cui vuoi prenotare(AAA-MM-DD)");
+		System.out.println("Inserisci in che data vuoi prenotare(AAA-MM-DD)");
 		String dataPren = in.nextLine();
 		LocalDate dataPrenotazione = LocalDate.parse(dataPren);
 		LocalDate dataScad = LocalDate.parse(dataPren).plusDays(1);
-		System.out.println("inserisci l'id della postazione da prenotare");
+		System.out.println("Inserisci l'id della postazione da prenotare");
 		int idPos = in.nextInt();
 		Postazione postazione = getPostazione(idPos);
-		System.out.println("inserisci l'id dell'utente");
+		System.out.println("Inserisci l'id dell'utente");
 		int idUser = in.nextInt();
 		Utente utente = getUtente(idUser);
-		insertPrenotazione(dataPrenotazione, dataScad, postazione, utente);
+		
+		long countElementi = prens.getCountPrenotazioni(dataPrenotazione, idPos);
+		System.out.println(countElementi);
+		int nMaxOccupanti = postazione.getNMaxOccupanti();
+		if(countElementi == nMaxOccupanti) {
+			System.out.println("La postazione " + idPos + " è completa per la data scelta! Non puoi prenotare!");
+			System.exit(0);
+		} else if(countElementi < nMaxOccupanti){
+			long contaElementi = prens.getCountPrenotazioniUtente(dataPrenotazione, idUser);
+			if(contaElementi >= 1) {
+				System.out.println("Hai già una prenotazione per questa data. Non puoi prenotare altre postazioni!");
+				System.exit(0);
+			} else {
+				insertPrenotazione(dataPrenotazione, dataScad, postazione, utente);
+
+			}
+		}
 	}
 
 	private Utente getUtente(int idUser) {
@@ -199,7 +215,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 
 	public void findAllPostazioni() {
 		String sep = "-----------------------------------";
-		System.out.println("Postazioni nella tabella 'postazioni':");
+		System.out.println("Tutte le postazioni:");
 		List<Postazione> postazione = ps.getAllPostazioni();
 		postazione.stream().forEach(pos -> {
 			System.out.println(pos);
@@ -227,12 +243,14 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		});
 	}
 	
+	public void check(String data, int id) {
+		
+	}
 
-	// -----METODI PER GESTORE------
 	public void selezioneAmministrazione() {
 		System.out.println("1 - Crea un edificio");
 		System.out.println("2 - Crea una postazione");
-		System.out.println("Seleziona un numero");
+		System.out.println("Seleziona un numero:");
 		int selezione = in.nextInt();
 		switch (selezione) {
 		case (1):
@@ -249,11 +267,11 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 
 	public void creaEdificio() {
 		in.nextLine();
-		System.out.println("Inserisci nome");
+		System.out.println("Inserisci nome:");
 		String nome = in.nextLine();
-		System.out.println("Inserisci città");
+		System.out.println("Inserisci città:");
 		String citta = in.nextLine();
-		System.out.println("Inserisci indirizzo");
+		System.out.println("Inserisci Indirizzo:");
 		String indirizzo = in.nextLine();
 		insertEdificio(citta, indirizzo, nome);
 	}
@@ -264,7 +282,7 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		System.out.println("1 - Privato");
 		System.out.println("2 - Openspace");
 		System.out.println("3 - Sala riunioni");
-		System.out.println("Inserisci il tipo");
+		System.out.println("Inserisci il tipo:");
 		int selezioneTipo = in.nextInt();
 		if (selezioneTipo == 1) {
 			tipoPostazione = TipoPostazione.PRIVATO;
@@ -273,9 +291,9 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 		} else if (selezioneTipo == 3) {
 			tipoPostazione = TipoPostazione.SALA_RIUNIONI;
 		} else {
-			System.out.println("inserisci un valore esatto!");
+			System.out.println("Inserisci un valore esatto!");
 		}
-		System.out.println("Inserisci il numero massimo di occupanti");
+		System.out.println("Inserisci il numero massimo di occupanti:");
 		int nMaxOccupanti = in.nextInt();
 		System.out.println("Inserisci l'id dell'edificio");
 		int idEdificio = in.nextInt();
@@ -285,16 +303,15 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 
 	public void creaUtente() {
 		in.nextLine();
-		System.out.println("Inserisci username");
+		System.out.println("Inserisci username:");
 		String username = in.nextLine();
-		System.out.println("Inserisci nome e cognome");
+		System.out.println("Inserisci nome e cognome:");
 		String nome = in.nextLine();
-		System.out.println("Inserisci email");
+		System.out.println("Inserisci email:");
 		String email = in.nextLine();
 		insertUtente(nome, email, username);
 	}
 
-	// --------METODI INSTANZIAMENTO----------
 	public Edificio insertEdificio(String citta, String indirizzo, String nome) {
 		Edificio e = (Edificio) ctxE.getBean("e");
 		e.setCitta(citta);
@@ -319,7 +336,6 @@ public class Esercizio1G5S5Application implements CommandLineRunner {
 	public Postazione insertPostazione(int nMaxOccupanti, TipoPostazione tipo, Edificio edificio) {
 		Postazione pos = (Postazione) ctxP.getBean("pos");
 		pos.setEdificio(edificio);
-		pos.setLibero(true);
 		pos.setNMaxOccupanti(nMaxOccupanti);
 		pos.setTipo(tipo);
 		ps.insertPostazione(pos);

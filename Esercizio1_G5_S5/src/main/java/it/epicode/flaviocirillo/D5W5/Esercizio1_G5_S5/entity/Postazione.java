@@ -51,7 +51,7 @@ public class Postazione {
 
 	@Override
 	public String toString() {
-		return "ID POSTAZIONE: - " + postazione_id + " " + " | Nome edificio: " + edificio.getNome() +" | Città: " + edificio.getCitta() + " | Indirizzo: " + edificio.getIndirizzo();
+		return "Id postazione: - " + postazione_id + " " + " | Nome edificio: " + edificio.getNome() +" | Città: " + edificio.getCitta() + " | Indirizzo: " + edificio.getIndirizzo();
 	}	
 	
 }
